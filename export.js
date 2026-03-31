@@ -67,7 +67,7 @@ const DataManager = (() => {
     // PDF always uses English labels — jsPDF's built-in fonts don't support
     // CJK glyphs, and German umlauts can also render incorrectly. Fetching the
     // 'en' locale separately guarantees clean Latin output for every UI language.
-    async function exportPDF(chartCanvas) {
+    async function exportPDF() {
         // Load English locale for PDF labels
         let en = {};
         try {
@@ -176,18 +176,22 @@ const DataManager = (() => {
         addLine();
 
         // ---- Chart Screenshot ----
-        if (chartCanvas) {
+        // Use Chart.js toBase64Image() via app.js helper to avoid canvas taint
+        // SecurityError that occurs when calling canvas.toDataURL() directly on
+        // a canvas that Chart.js rendered using CDN-loaded resources.
+        const imgData = typeof window.getChartImage === 'function' ? window.getChartImage() : null;
+        if (imgData) {
             checkPageBreak(80);
             addTitle(t_en('dataManagement.pdfConcentrationChart'), 14);
             try {
-                const imgData = chartCanvas.toDataURL('image/png');
-                const ratio = chartCanvas.height / chartCanvas.width;
+                const canvas = document.getElementById('pkChart');
+                const ratio = canvas ? (canvas.height / canvas.width) : 0.4;
                 const imgWidth = contentWidth;
                 const imgHeight = imgWidth * ratio;
                 doc.addImage(imgData, 'PNG', margin, y, imgWidth, Math.min(imgHeight, 80));
                 y += Math.min(imgHeight, 80) + 5;
             } catch (e) {
-                addText('(Chart capture failed)', 9);
+                addText('(Chart capture failed: ' + e.message + ')', 9);
             }
             addLine();
         }

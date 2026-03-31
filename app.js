@@ -6,6 +6,14 @@ let chartInstance = null;
 let bodyWeightChartInstance = null;
 let bodyBFChartInstance = null;
 
+// Expose chart image for PDF export — uses Chart.js native toBase64Image()
+// to avoid canvas taint SecurityError from CDN-loaded resources.
+function getChartImage() {
+    if (!chartInstance) return null;
+    return chartInstance.toBase64Image('image/png', 1.0);
+}
+window.getChartImage = getChartImage;
+
 // ========== State Management ==========
 
 function loadState() {
@@ -796,8 +804,7 @@ function initDataManagement() {
         showDataStatus(I18n.t('dataManagement.pdfGenerating'), 'info');
         try {
             // Make sure simulation tab chart is rendered
-            const canvas = document.getElementById('pkChart');
-            await DataManager.exportPDF(canvas);
+            await DataManager.exportPDF();
             showDataStatus(I18n.t('dataManagement.pdfSuccess'), 'success');
         } catch (err) {
             showDataStatus('PDF export error: ' + err.message, 'error');

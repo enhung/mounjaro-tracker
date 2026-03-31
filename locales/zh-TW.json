@@ -1,0 +1,129 @@
+{
+  "app": {
+    "title": "猛健樂 (Mounjaro) 濃度模擬器",
+    "subtitle": "藉由藥物動力學模型估算體內 Tirzepatide 的殘留量與濃度變化",
+    "langLabel": "語言"
+  },
+  "tabs": {
+    "simulation": "濃度模擬",
+    "diet": "飲食建議",
+    "exercise": "運動紀錄",
+    "data": "資料管理"
+  },
+  "doses": {
+    "title": "施打紀錄",
+    "addBtn": "新增紀錄",
+    "dayLabel": "天數 (Day)",
+    "amountLabel": "劑量 (mg)",
+    "removeTitle": "移除",
+    "startDateLabel": "開始用藥日期",
+    "actualDateLabel": "實際日期",
+    "daysSinceStart": "距今已用藥 {days} 天",
+    "nextDose": "下一針預計：{date}"
+  },
+  "simulation": {
+    "simDaysLabel": "模擬天數 (從第一天起算)",
+    "thresholdLabel": "不適警示閾值 (mg)",
+    "thresholdTitle": "輸入您上次感到不適時的粗估峰值。",
+    "infoTitle": "模型參數",
+    "infoText": "半衰期 (Half-life) 約 5 天 (120 小時)。抵達最高血中濃度時間 (Tmax) 約 2 天 (48 小時)。採用單室線性吸收與消除模型繪製。",
+    "chartTitle": "體內藥物量預測變化圖",
+    "peakTitle": "預測絕對最高峰值",
+    "residualTitle": "模擬期末體內殘留量",
+    "chartLabelAmount": "預估體內殘留量 (mg)",
+    "chartLabelThreshold": "不適警示閾值 (mg)",
+    "chartXAxis": "天數 (Days)",
+    "chartYAxis": "藥物量 (mg)",
+    "chartTooltipDay": "Day {day}"
+  },
+  "diet": {
+    "title": "飲食建議",
+    "subtitle": "使用 Tirzepatide 期間的飲食注意事項",
+    "alcoholWarning": "避免飲酒",
+    "alcoholTitle": "酒精與 Tirzepatide",
+    "alcoholText": "使用 Tirzepatide 期間應嚴格避免飲酒。酒精會加重藥物的胃腸道副作用（噁心、嘔吐），並可能增加低血糖風險。即使是聲稱「無酒精」的啤酒，仍可能含有微量酒精（通常 0.5% 以下）。",
+    "nafBeerTitle": "關於無酒精啤酒",
+    "nafBeerText": "如果您選擇飲用無酒精啤酒，請務必選擇經過「過濾」處理的產品。未過濾的無酒精啤酒可能含有殘存酵母和較高的微量酒精，不適合用藥期間飲用。購買時請確認標籤上標示「過濾」(Filtered) 字樣。",
+    "mealTitle": "飲食原則",
+    "mealItems": [
+      "少量多餐：將每日飲食分成 5-6 小份，避免一次大量進食",
+      "細嚼慢嚥：每口咀嚼 20-30 次，幫助消化並減少噁心感",
+      "避免高脂食物：減少油炸、高油脂食物，降低胃腸不適的機率",
+      "充足水分：每日建議飲水 1.5-2 公升，少量多次飲用",
+      "優質蛋白質：確保足夠的蛋白質攝取（雞胸、魚、豆腐等），防止肌肉流失",
+      "高纖蔬果：增加蔬菜和水果攝取，幫助維持腸胃功能"
+    ],
+    "supplementTitle": "營養補充建議",
+    "supplementItems": [
+      "綜合維他命：由於食量減少，建議每日補充綜合維他命",
+      "維生素 B12：長期使用 GLP-1 類藥物可能影響 B12 吸收",
+      "鈣與維生素 D：維持骨骼健康，尤其在體重快速下降期間",
+      "電解質：如出現嘔吐或腹瀉症狀，需注意電解質補充"
+    ],
+    "timingTitle": "進食時機",
+    "timingText": "注射後 24-48 小時內副作用最明顯，建議此期間飲食更為清淡。隨著身體適應藥物，可逐步恢復正常飲食。"
+  },
+  "exercise": {
+    "title": "運動紀錄",
+    "subtitle": "記錄用藥期間的運動情況",
+    "addBtn": "新增運動紀錄",
+    "dateLabel": "日期",
+    "typeLabel": "運動類型",
+    "durationLabel": "時長 (分鐘)",
+    "noteLabel": "備註",
+    "removeTitle": "移除",
+    "types": {
+      "cardio": "有氧運動",
+      "strength": "重量訓練",
+      "flexibility": "伸展/瑜伽",
+      "walking": "步行/散步",
+      "other": "其他"
+    },
+    "adviceTitle": "用藥期間運動建議",
+    "adviceItems": [
+      "循序漸進：從低強度開始，隨體能狀況逐步增加運動量",
+      "重量訓練優先：每週至少 2-3 次重訓，減少減重期間的肌肉流失",
+      "注射後休息：注射當天及隔天避免劇烈運動，尤其有噁心症狀時",
+      "注意水分：運動前中後都要補充水分，避免脫水加重副作用",
+      "監測血糖：如為糖尿病患者，運動前後注意血糖變化",
+      "傾聽身體：出現暈眩、嚴重噁心或不適應立即停止運動"
+    ],
+    "noRecords": "尚無運動紀錄，點擊上方按鈕新增",
+    "summaryTitle": "運動摘要",
+    "totalSessions": "總運動次數",
+    "totalMinutes": "總運動時長",
+    "minutesUnit": "分鐘"
+  },
+  "dataManagement": {
+    "title": "資料管理",
+    "subtitle": "匯出備份或匯入先前的紀錄",
+    "exportJsonBtn": "匯出 JSON 備份",
+    "exportJsonDesc": "將所有劑量紀錄、運動紀錄和設定匯出為 JSON 檔案",
+    "importJsonBtn": "匯入 JSON 備份",
+    "importJsonDesc": "從先前匯出的 JSON 檔案還原資料",
+    "exportPdfBtn": "匯出 PDF 報告",
+    "exportPdfDesc": "產生包含圖表和紀錄的完整 PDF 報告",
+    "importConfirm": "匯入將覆蓋目前所有資料，確定要繼續嗎？",
+    "importSuccess": "資料匯入成功！",
+    "importError": "匯入失敗：檔案格式不正確",
+    "exportSuccess": "備份檔案已下載",
+    "pdfGenerating": "正在產生 PDF 報告...",
+    "pdfSuccess": "PDF 報告已下載",
+    "pdfTitle": "猛健樂用藥紀錄報告",
+    "pdfGenDate": "報告產生日期",
+    "pdfDoseSummary": "用藥摘要",
+    "pdfStartDate": "開始用藥日期",
+    "pdfTotalDoses": "總施打次數",
+    "pdfCurrentDose": "目前劑量",
+    "pdfDoseRecords": "施打紀錄",
+    "pdfConcentrationChart": "濃度變化圖",
+    "pdfExerciseRecords": "運動紀錄",
+    "pdfDietReminder": "飲食提醒重點",
+    "pdfDisclaimer": "本報告僅供參考，不可取代專業醫療建議。"
+  },
+  "footer": {
+    "disclaimer": "醫療免責聲明：",
+    "disclaimerText": "本工具僅供學術模擬與參考之用，計算結果基於簡化的單室藥物動力學模型與平均參數，無法代表個體真實生理狀況。任何劑量調整或用藥決策，請務必諮詢專業減重醫師或醫療人員。請勿以此結果取代專業醫療建議。",
+    "privacyText": "此開源工具不會將您的資料上傳至任何醫療伺服器，所有紀錄僅保存在您的瀏覽器中。"
+  }
+}

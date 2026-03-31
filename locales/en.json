@@ -1,0 +1,129 @@
+{
+  "app": {
+    "title": "Mounjaro PK Simulator",
+    "subtitle": "Estimate in-body Tirzepatide residual amount and concentration changes using a pharmacokinetic model",
+    "langLabel": "Language"
+  },
+  "tabs": {
+    "simulation": "Simulation",
+    "diet": "Diet Advice",
+    "exercise": "Exercise Log",
+    "data": "Data Management"
+  },
+  "doses": {
+    "title": "Injection Records",
+    "addBtn": "Add Record",
+    "dayLabel": "Day",
+    "amountLabel": "Dose (mg)",
+    "removeTitle": "Remove",
+    "startDateLabel": "Treatment Start Date",
+    "actualDateLabel": "Actual Date",
+    "daysSinceStart": "{days} days since treatment started",
+    "nextDose": "Next injection expected: {date}"
+  },
+  "simulation": {
+    "simDaysLabel": "Simulation Days (from day 1)",
+    "thresholdLabel": "Discomfort Threshold (mg)",
+    "thresholdTitle": "Enter the estimated peak value when you last felt discomfort.",
+    "infoTitle": "Model Parameters",
+    "infoText": "Half-life approx. 5 days (120 hours). Time to peak concentration (Tmax) approx. 2 days (48 hours). Uses a one-compartment linear absorption and elimination model.",
+    "chartTitle": "Predicted Drug Amount Over Time",
+    "peakTitle": "Predicted Absolute Peak",
+    "residualTitle": "End-of-Simulation Residual",
+    "chartLabelAmount": "Estimated Residual Amount (mg)",
+    "chartLabelThreshold": "Discomfort Threshold (mg)",
+    "chartXAxis": "Days",
+    "chartYAxis": "Drug Amount (mg)",
+    "chartTooltipDay": "Day {day}"
+  },
+  "diet": {
+    "title": "Diet Advice",
+    "subtitle": "Dietary considerations while using Tirzepatide",
+    "alcoholWarning": "Avoid Alcohol",
+    "alcoholTitle": "Alcohol & Tirzepatide",
+    "alcoholText": "You should strictly avoid alcohol while using Tirzepatide. Alcohol can worsen the drug's gastrointestinal side effects (nausea, vomiting) and may increase the risk of hypoglycemia. Even so-called \"non-alcoholic\" beers may still contain trace amounts of alcohol (typically below 0.5%).",
+    "nafBeerTitle": "About Non-Alcoholic Beer",
+    "nafBeerText": "If you choose to drink non-alcoholic beer, make sure to select products that have been \"filtered.\" Unfiltered non-alcoholic beers may contain residual yeast and higher trace alcohol levels, making them unsuitable during treatment. Check the label for the word \"Filtered\" when purchasing.",
+    "mealTitle": "Dietary Principles",
+    "mealItems": [
+      "Eat small, frequent meals: Split daily food into 5-6 small portions to avoid large meals",
+      "Chew slowly: Chew each bite 20-30 times to aid digestion and reduce nausea",
+      "Avoid high-fat foods: Reduce fried and high-fat foods to lower GI discomfort",
+      "Stay hydrated: Drink 1.5-2 liters of water daily, in small frequent sips",
+      "Quality protein: Ensure adequate protein intake (chicken breast, fish, tofu, etc.) to prevent muscle loss",
+      "High-fiber produce: Increase vegetable and fruit intake to maintain GI function"
+    ],
+    "supplementTitle": "Supplement Recommendations",
+    "supplementItems": [
+      "Multivitamin: Since food intake decreases, consider daily multivitamin supplementation",
+      "Vitamin B12: Long-term GLP-1 agonist use may affect B12 absorption",
+      "Calcium & Vitamin D: Maintain bone health, especially during rapid weight loss",
+      "Electrolytes: If experiencing vomiting or diarrhea, monitor electrolyte levels"
+    ],
+    "timingTitle": "Meal Timing",
+    "timingText": "Side effects are most noticeable 24-48 hours after injection. Keep meals lighter during this period. As your body adjusts to the medication, you can gradually return to normal eating patterns."
+  },
+  "exercise": {
+    "title": "Exercise Log",
+    "subtitle": "Track your exercise during treatment",
+    "addBtn": "Add Exercise Record",
+    "dateLabel": "Date",
+    "typeLabel": "Exercise Type",
+    "durationLabel": "Duration (min)",
+    "noteLabel": "Notes",
+    "removeTitle": "Remove",
+    "types": {
+      "cardio": "Cardio",
+      "strength": "Strength Training",
+      "flexibility": "Stretching/Yoga",
+      "walking": "Walking",
+      "other": "Other"
+    },
+    "adviceTitle": "Exercise Advice During Treatment",
+    "adviceItems": [
+      "Start gradually: Begin with low intensity and progressively increase as fitness allows",
+      "Prioritize strength training: At least 2-3 sessions per week to minimize muscle loss during weight reduction",
+      "Rest after injection: Avoid vigorous exercise on injection day and the day after, especially if experiencing nausea",
+      "Stay hydrated: Drink water before, during, and after exercise to prevent dehydration worsening side effects",
+      "Monitor blood sugar: If diabetic, check blood glucose before and after exercise",
+      "Listen to your body: Stop immediately if you experience dizziness, severe nausea, or discomfort"
+    ],
+    "noRecords": "No exercise records yet. Click the button above to add one.",
+    "summaryTitle": "Exercise Summary",
+    "totalSessions": "Total Sessions",
+    "totalMinutes": "Total Duration",
+    "minutesUnit": "min"
+  },
+  "dataManagement": {
+    "title": "Data Management",
+    "subtitle": "Export backups or import previous records",
+    "exportJsonBtn": "Export JSON Backup",
+    "exportJsonDesc": "Export all dose records, exercise records, and settings as a JSON file",
+    "importJsonBtn": "Import JSON Backup",
+    "importJsonDesc": "Restore data from a previously exported JSON file",
+    "exportPdfBtn": "Export PDF Report",
+    "exportPdfDesc": "Generate a comprehensive PDF report with charts and records",
+    "importConfirm": "Importing will overwrite all current data. Are you sure you want to continue?",
+    "importSuccess": "Data imported successfully!",
+    "importError": "Import failed: Invalid file format",
+    "exportSuccess": "Backup file downloaded",
+    "pdfGenerating": "Generating PDF report...",
+    "pdfSuccess": "PDF report downloaded",
+    "pdfTitle": "Mounjaro Treatment Record Report",
+    "pdfGenDate": "Report Generated",
+    "pdfDoseSummary": "Treatment Summary",
+    "pdfStartDate": "Treatment Start Date",
+    "pdfTotalDoses": "Total Injections",
+    "pdfCurrentDose": "Current Dose",
+    "pdfDoseRecords": "Injection Records",
+    "pdfConcentrationChart": "Concentration Chart",
+    "pdfExerciseRecords": "Exercise Records",
+    "pdfDietReminder": "Diet Reminders",
+    "pdfDisclaimer": "This report is for reference only and should not replace professional medical advice."
+  },
+  "footer": {
+    "disclaimer": "Medical Disclaimer:",
+    "disclaimerText": "This tool is for academic simulation and reference purposes only. Calculations are based on a simplified one-compartment pharmacokinetic model with average parameters and cannot represent individual physiological conditions. For any dosage adjustments or medication decisions, please consult a qualified weight management physician or healthcare professional. Do not use these results as a substitute for professional medical advice.",
+    "privacyText": "This open-source tool does not upload your data to any medical server. All records are stored only in your browser."
+  }
+}

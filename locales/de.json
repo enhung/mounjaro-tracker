@@ -1,0 +1,129 @@
+{
+  "app": {
+    "title": "Mounjaro PK-Simulator",
+    "subtitle": "Schätzung der Tirzepatid-Restmenge und Konzentrationsänderungen im Körper mittels pharmakokinetischem Modell",
+    "langLabel": "Sprache"
+  },
+  "tabs": {
+    "simulation": "Simulation",
+    "diet": "Ernährungshinweise",
+    "exercise": "Sportprotokoll",
+    "data": "Datenverwaltung"
+  },
+  "doses": {
+    "title": "Injektionsprotokoll",
+    "addBtn": "Eintrag hinzufügen",
+    "dayLabel": "Tag",
+    "amountLabel": "Dosis (mg)",
+    "removeTitle": "Entfernen",
+    "startDateLabel": "Behandlungsbeginn",
+    "actualDateLabel": "Tatsächliches Datum",
+    "daysSinceStart": "{days} Tage seit Behandlungsbeginn",
+    "nextDose": "Nächste Injektion voraussichtlich: {date}"
+  },
+  "simulation": {
+    "simDaysLabel": "Simulationstage (ab Tag 1)",
+    "thresholdLabel": "Unbehagen-Schwellenwert (mg)",
+    "thresholdTitle": "Geben Sie den geschätzten Spitzenwert ein, bei dem Sie zuletzt Unbehagen verspürt haben.",
+    "infoTitle": "Modellparameter",
+    "infoText": "Halbwertszeit ca. 5 Tage (120 Stunden). Zeit bis zur maximalen Konzentration (Tmax) ca. 2 Tage (48 Stunden). Verwendet ein Ein-Kompartiment-Modell mit linearer Absorption und Elimination.",
+    "chartTitle": "Vorhergesagte Wirkstoffmenge im Zeitverlauf",
+    "peakTitle": "Vorhergesagter absoluter Spitzenwert",
+    "residualTitle": "Restmenge am Simulationsende",
+    "chartLabelAmount": "Geschätzte Restmenge (mg)",
+    "chartLabelThreshold": "Unbehagen-Schwellenwert (mg)",
+    "chartXAxis": "Tage",
+    "chartYAxis": "Wirkstoffmenge (mg)",
+    "chartTooltipDay": "Tag {day}"
+  },
+  "diet": {
+    "title": "Ernährungshinweise",
+    "subtitle": "Ernährungshinweise während der Tirzepatid-Behandlung",
+    "alcoholWarning": "Alkohol vermeiden",
+    "alcoholTitle": "Alkohol & Tirzepatid",
+    "alcoholText": "Während der Tirzepatid-Behandlung sollten Sie strikt auf Alkohol verzichten. Alkohol kann die gastrointestinalen Nebenwirkungen des Medikaments (Übelkeit, Erbrechen) verstärken und das Hypoglykämie-Risiko erhöhen. Auch sogenanntes „alkoholfreies" Bier kann noch Spuren von Alkohol enthalten (in der Regel unter 0,5 %).",
+    "nafBeerTitle": "Über alkoholfreies Bier",
+    "nafBeerText": "Wenn Sie alkoholfreies Bier trinken möchten, wählen Sie unbedingt „gefiltertes" Produkt. Ungefiltertes alkoholfreies Bier kann Resthefen und höhere Spuren von Alkohol enthalten und ist während der Behandlung nicht geeignet. Achten Sie beim Kauf auf die Angabe „Gefiltert" (Filtered) auf dem Etikett.",
+    "mealTitle": "Ernährungsgrundsätze",
+    "mealItems": [
+      "Kleine, häufige Mahlzeiten: Teilen Sie die tägliche Nahrung in 5-6 kleine Portionen auf",
+      "Langsam kauen: Jeden Bissen 20-30 Mal kauen, um die Verdauung zu unterstützen und Übelkeit zu reduzieren",
+      "Fettreiche Speisen vermeiden: Reduzieren Sie frittierte und fettreiche Lebensmittel",
+      "Ausreichend trinken: Täglich 1,5-2 Liter Wasser in kleinen, häufigen Schlucken trinken",
+      "Hochwertiges Protein: Ausreichende Proteinzufuhr sicherstellen (Hähnchenbrust, Fisch, Tofu etc.)",
+      "Ballaststoffreiches Obst und Gemüse: Mehr Gemüse und Obst für eine gesunde Verdauung"
+    ],
+    "supplementTitle": "Nahrungsergänzungsempfehlungen",
+    "supplementItems": [
+      "Multivitamin: Bei reduzierter Nahrungsaufnahme tägliche Multivitamin-Ergänzung empfohlen",
+      "Vitamin B12: Langfristige GLP-1-Agonisten-Nutzung kann die B12-Aufnahme beeinflussen",
+      "Kalzium & Vitamin D: Knochengesundheit erhalten, besonders bei schnellem Gewichtsverlust",
+      "Elektrolyte: Bei Erbrechen oder Durchfall auf Elektrolythaushalt achten"
+    ],
+    "timingTitle": "Essenszeiten",
+    "timingText": "Nebenwirkungen sind 24-48 Stunden nach der Injektion am stärksten. Halten Sie die Mahlzeiten in diesem Zeitraum leichter. Mit der Anpassung des Körpers an das Medikament können Sie schrittweise zur normalen Ernährung zurückkehren."
+  },
+  "exercise": {
+    "title": "Sportprotokoll",
+    "subtitle": "Dokumentieren Sie Ihre sportlichen Aktivitäten während der Behandlung",
+    "addBtn": "Sporteintrag hinzufügen",
+    "dateLabel": "Datum",
+    "typeLabel": "Sportart",
+    "durationLabel": "Dauer (Min.)",
+    "noteLabel": "Notizen",
+    "removeTitle": "Entfernen",
+    "types": {
+      "cardio": "Ausdauertraining",
+      "strength": "Krafttraining",
+      "flexibility": "Dehnung/Yoga",
+      "walking": "Gehen/Spazieren",
+      "other": "Sonstiges"
+    },
+    "adviceTitle": "Sportempfehlungen während der Behandlung",
+    "adviceItems": [
+      "Schrittweise steigern: Mit niedriger Intensität beginnen und allmählich steigern",
+      "Krafttraining priorisieren: Mindestens 2-3 Einheiten pro Woche, um Muskelverlust zu minimieren",
+      "Nach Injektion ruhen: Am Injektionstag und danach intensive Übungen vermeiden, besonders bei Übelkeit",
+      "Ausreichend trinken: Vor, während und nach dem Sport Wasser trinken",
+      "Blutzucker überwachen: Bei Diabetes Blutzucker vor und nach dem Sport kontrollieren",
+      "Auf den Körper hören: Bei Schwindel, starker Übelkeit oder Unwohlsein sofort aufhören"
+    ],
+    "noRecords": "Noch keine Sporteinträge. Klicken Sie oben auf die Schaltfläche, um einen hinzuzufügen.",
+    "summaryTitle": "Sportzusammenfassung",
+    "totalSessions": "Gesamteinheiten",
+    "totalMinutes": "Gesamtdauer",
+    "minutesUnit": "Min."
+  },
+  "dataManagement": {
+    "title": "Datenverwaltung",
+    "subtitle": "Sicherungen exportieren oder vorherige Einträge importieren",
+    "exportJsonBtn": "JSON-Sicherung exportieren",
+    "exportJsonDesc": "Alle Dosis-, Sport- und Einstellungsdaten als JSON-Datei exportieren",
+    "importJsonBtn": "JSON-Sicherung importieren",
+    "importJsonDesc": "Daten aus einer zuvor exportierten JSON-Datei wiederherstellen",
+    "exportPdfBtn": "PDF-Bericht exportieren",
+    "exportPdfDesc": "Umfassenden PDF-Bericht mit Diagrammen und Protokollen erstellen",
+    "importConfirm": "Beim Import werden alle aktuellen Daten überschrieben. Möchten Sie fortfahren?",
+    "importSuccess": "Daten erfolgreich importiert!",
+    "importError": "Import fehlgeschlagen: Ungültiges Dateiformat",
+    "exportSuccess": "Sicherungsdatei heruntergeladen",
+    "pdfGenerating": "PDF-Bericht wird erstellt...",
+    "pdfSuccess": "PDF-Bericht heruntergeladen",
+    "pdfTitle": "Mounjaro Behandlungsprotokoll",
+    "pdfGenDate": "Bericht erstellt am",
+    "pdfDoseSummary": "Behandlungsübersicht",
+    "pdfStartDate": "Behandlungsbeginn",
+    "pdfTotalDoses": "Gesamtinjektionen",
+    "pdfCurrentDose": "Aktuelle Dosis",
+    "pdfDoseRecords": "Injektionsprotokoll",
+    "pdfConcentrationChart": "Konzentrationsdiagramm",
+    "pdfExerciseRecords": "Sportprotokoll",
+    "pdfDietReminder": "Ernährungshinweise",
+    "pdfDisclaimer": "Dieser Bericht dient nur als Referenz und ersetzt keine professionelle medizinische Beratung."
+  },
+  "footer": {
+    "disclaimer": "Medizinischer Haftungsausschluss:",
+    "disclaimerText": "Dieses Tool dient ausschließlich der akademischen Simulation und Referenz. Die Berechnungen basieren auf einem vereinfachten Ein-Kompartiment-pharmakokinetischen Modell mit Durchschnittsparametern und können individuelle physiologische Gegebenheiten nicht darstellen. Bei Dosisanpassungen oder Medikationsentscheidungen konsultieren Sie bitte einen qualifizierten Arzt. Verwenden Sie diese Ergebnisse nicht als Ersatz für professionelle medizinische Beratung.",
+    "privacyText": "Dieses Open-Source-Tool lädt Ihre Daten nicht auf medizinische Server hoch. Alle Einträge werden nur in Ihrem Browser gespeichert."
+  }
+}

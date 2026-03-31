@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>猛健樂 (Mounjaro) 藥物動力學模擬器</title>
-    <meta name="description" content="專為台灣使用者設計的猛健樂 (Tirzepatide) 藥物動力學模擬器，協助計算並視覺化體內藥物累積濃度與半衰期。">
+    <meta name="description"
+        content="專為使用者設計的猛健樂 (Tirzepatide) 藥物動力學模擬器，協助計算並視覺化體內藥物累積濃度與半衰期。">
     <meta name="keywords" content="猛健樂, Mounjaro, Tirzepatide, 半衰期, 藥物動力學, 減重, 模擬器, 濃度計算">
 
     <!-- Open Graph for Social Sharing -->
@@ -15,6 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -24,64 +26,240 @@
 
     <div class="app-container">
         <header>
-            <h1><i class="fa-solid fa-syringe"></i> 猛健樂 (Mounjaro) 濃度模擬器</h1>
-            <p>藉由藥物動力學模型估算體內 Tirzepatide 的殘留量與濃度變化</p>
-        </header>
-
-        <div class="main-content">
-            <div class="panel input-panel">
-                <div class="panel-header">
-                    <h2><i class="fa-solid fa-clipboard-list"></i> 施打紀錄</h2>
-                    <button id="add-dose-btn" class="btn btn-primary"><i class="fa-solid fa-plus"></i> 新增紀錄</button>
-                </div>
-
-                <div class="doses-container" id="doses-container">
-                    <!-- Doses will be injected here by JS -->
-                </div>
-
-                <div class="simulation-controls">
-                    <div class="form-group">
-                        <label for="sim-days">模擬天數 (從第一天起算)</label>
-                        <input type="number" id="sim-days" value="60" min="10" max="365">
-                    </div>
-                </div>
-
-                <div class="info-box">
-                    <strong><i class="fa-solid fa-circle-info"></i> 模型參數</strong>
-                    <p>半衰期 (Half-life) 約 5 天 (120 小時)。抵達最高血中濃度時間 (Tmax) 約 2 天 (48 小時)。採用單室線性吸收與消除模型繪製。</p>
+            <div class="header-top">
+                <h1><i class="fa-solid fa-syringe"></i> <span data-i18n="app.title">猛健樂 (Mounjaro) 濃度模擬器</span></h1>
+                <div class="lang-switcher">
+                    <label for="lang-select"><i class="fa-solid fa-globe"></i></label>
+                    <select id="lang-select"></select>
                 </div>
             </div>
+            <p data-i18n="app.subtitle">藉由藥物動力學模型估算體內 Tirzepatide 的殘留量與濃度變化</p>
+        </header>
 
-            <div class="panel chart-panel">
-                <div class="panel-header">
-                    <h2><i class="fa-solid fa-chart-area"></i> 體內藥物量預測變化圖</h2>
-                </div>
-                <div class="chart-container">
-                    <canvas id="pkChart"></canvas>
-                </div>
-                <div class="stats-container" id="stats-container">
-                    <div class="stat-card highlight">
-                        <div class="stat-title">預測絕對最高峰值</div>
-                        <div class="stat-value" id="stat-peak">0.00 <span class="unit">mg</span></div>
+        <!-- Tab Navigation -->
+        <nav class="tab-nav" id="tab-nav">
+            <button class="tab-btn active" data-tab="simulation">
+                <i class="fa-solid fa-chart-area"></i> <span data-i18n="tabs.simulation">濃度模擬</span>
+            </button>
+            <button class="tab-btn" data-tab="diet">
+                <i class="fa-solid fa-utensils"></i> <span data-i18n="tabs.diet">飲食建議</span>
+            </button>
+            <button class="tab-btn" data-tab="exercise">
+                <i class="fa-solid fa-dumbbell"></i> <span data-i18n="tabs.exercise">運動紀錄</span>
+            </button>
+            <button class="tab-btn" data-tab="data">
+                <i class="fa-solid fa-database"></i> <span data-i18n="tabs.data">資料管理</span>
+            </button>
+        </nav>
+
+        <!-- ==================== TAB: Simulation ==================== -->
+        <div class="tab-content active" id="tab-simulation">
+            <div class="main-content">
+                <div class="panel input-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-clipboard-list"></i> <span data-i18n="doses.title">施打紀錄</span></h2>
+                        <button id="add-dose-btn" class="btn btn-primary"><i class="fa-solid fa-plus"></i> <span data-i18n="doses.addBtn">新增紀錄</span></button>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-title">模擬期末體內殘留量</div>
-                        <div class="stat-value" id="stat-current">0.00 <span class="unit">mg</span></div>
+
+                    <!-- Start Date -->
+                    <div class="start-date-section">
+                        <div class="form-group">
+                            <label for="start-date"><i class="fa-solid fa-calendar-day"></i> <span data-i18n="doses.startDateLabel">開始用藥日期</span></label>
+                            <input type="date" id="start-date">
+                        </div>
+                        <div class="days-since-start" id="days-since-start"></div>
+                    </div>
+
+                    <div class="doses-container" id="doses-container">
+                        <!-- Doses will be injected here by JS -->
+                    </div>
+
+                    <div class="simulation-controls">
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label for="sim-days" data-i18n="simulation.simDaysLabel">模擬天數 (從第一天起算)</label>
+                            <input type="number" id="sim-days" value="60" min="10" max="365">
+                        </div>
+                        <div class="form-group">
+                            <label for="risk-threshold"><i class="fa-solid fa-triangle-exclamation"
+                                    style="color: var(--danger-color);"></i> <span data-i18n="simulation.thresholdLabel">不適警示閾值 (mg)</span></label>
+                            <input type="number" id="risk-threshold" value="4.0" min="0" step="0.1">
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <strong><i class="fa-solid fa-circle-info"></i> <span data-i18n="simulation.infoTitle">模型參數</span></strong>
+                        <p data-i18n="simulation.infoText">半衰期 (Half-life) 約 5 天 (120 小時)。抵達最高血中濃度時間 (Tmax) 約 2 天 (48 小時)。採用單室線性吸收與消除模型繪製。</p>
+                    </div>
+                </div>
+
+                <div class="panel chart-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-chart-area"></i> <span data-i18n="simulation.chartTitle">體內藥物量預測變化圖</span></h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="pkChart"></canvas>
+                    </div>
+                    <div class="stats-container" id="stats-container">
+                        <div class="stat-card highlight">
+                            <div class="stat-title" data-i18n="simulation.peakTitle">預測絕對最高峰值</div>
+                            <div class="stat-value" id="stat-peak">0.00 <span class="unit">mg</span></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title" data-i18n="simulation.residualTitle">模擬期末體內殘留量</div>
+                            <div class="stat-value" id="stat-current">0.00 <span class="unit">mg</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <!-- ==================== TAB: Diet ==================== -->
+        <div class="tab-content" id="tab-diet">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-utensils"></i> <span data-i18n="diet.title">飲食建議</span></h2>
+                </div>
+                <p class="section-subtitle" data-i18n="diet.subtitle">使用 Tirzepatide 期間的飲食注意事項</p>
+
+                <!-- Alcohol Warning -->
+                <div class="warning-box">
+                    <div class="warning-header">
+                        <i class="fa-solid fa-wine-bottle"></i>
+                        <strong data-i18n="diet.alcoholWarning">避免飲酒</strong>
+                    </div>
+                    <h3 data-i18n="diet.alcoholTitle">酒精與 Tirzepatide</h3>
+                    <p data-i18n="diet.alcoholText"></p>
+                </div>
+
+                <!-- Non-alcoholic beer -->
+                <div class="info-box" style="margin-top: 1rem;">
+                    <strong><i class="fa-solid fa-beer-mug-empty"></i> <span data-i18n="diet.nafBeerTitle">關於無酒精啤酒</span></strong>
+                    <p data-i18n="diet.nafBeerText"></p>
+                </div>
+
+                <!-- Meal principles -->
+                <div class="advice-section">
+                    <h3><i class="fa-solid fa-bowl-food"></i> <span data-i18n="diet.mealTitle">飲食原則</span></h3>
+                    <ul class="advice-list" id="diet-meal-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+
+                <!-- Supplements -->
+                <div class="advice-section">
+                    <h3><i class="fa-solid fa-pills"></i> <span data-i18n="diet.supplementTitle">營養補充建議</span></h3>
+                    <ul class="advice-list" id="diet-supplement-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+
+                <!-- Timing -->
+                <div class="advice-section">
+                    <h3><i class="fa-solid fa-clock"></i> <span data-i18n="diet.timingTitle">進食時機</span></h3>
+                    <p data-i18n="diet.timingText" class="advice-text"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: Exercise ==================== -->
+        <div class="tab-content" id="tab-exercise">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-dumbbell"></i> <span data-i18n="exercise.title">運動紀錄</span></h2>
+                    <button id="add-exercise-btn" class="btn btn-primary"><i class="fa-solid fa-plus"></i> <span data-i18n="exercise.addBtn">新增運動紀錄</span></button>
+                </div>
+                <p class="section-subtitle" data-i18n="exercise.subtitle">記錄用藥期間的運動情況</p>
+
+                <!-- Exercise Summary -->
+                <div class="stats-container exercise-summary" id="exercise-summary">
+                    <div class="stat-card">
+                        <div class="stat-title" data-i18n="exercise.totalSessions">總運動次數</div>
+                        <div class="stat-value" id="ex-total-sessions">0</div>
+                    </div>
+                    <div class="stat-card highlight">
+                        <div class="stat-title" data-i18n="exercise.totalMinutes">總運動時長</div>
+                        <div class="stat-value" id="ex-total-minutes">0 <span class="unit" data-i18n="exercise.minutesUnit">分鐘</span></div>
+                    </div>
+                </div>
+
+                <!-- Exercise Records -->
+                <div class="exercise-records" id="exercise-records">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Exercise Advice -->
+                <div class="advice-section" style="margin-top: 2rem;">
+                    <h3><i class="fa-solid fa-lightbulb"></i> <span data-i18n="exercise.adviceTitle">用藥期間運動建議</span></h3>
+                    <ul class="advice-list" id="exercise-advice-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: Data Management ==================== -->
+        <div class="tab-content" id="tab-data">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-database"></i> <span data-i18n="dataManagement.title">資料管理</span></h2>
+                </div>
+                <p class="section-subtitle" data-i18n="dataManagement.subtitle">匯出備份或匯入先前的紀錄</p>
+
+                <div class="data-actions">
+                    <!-- Export JSON -->
+                    <div class="data-action-card">
+                        <div class="data-action-icon"><i class="fa-solid fa-download"></i></div>
+                        <div class="data-action-content">
+                            <button id="export-json-btn" class="btn btn-primary">
+                                <i class="fa-solid fa-file-code"></i> <span data-i18n="dataManagement.exportJsonBtn">匯出 JSON 備份</span>
+                            </button>
+                            <p class="data-action-desc" data-i18n="dataManagement.exportJsonDesc">將所有劑量紀錄、運動紀錄和設定匯出為 JSON 檔案</p>
+                        </div>
+                    </div>
+
+                    <!-- Import JSON -->
+                    <div class="data-action-card">
+                        <div class="data-action-icon"><i class="fa-solid fa-upload"></i></div>
+                        <div class="data-action-content">
+                            <button id="import-json-btn" class="btn btn-primary">
+                                <i class="fa-solid fa-file-import"></i> <span data-i18n="dataManagement.importJsonBtn">匯入 JSON 備份</span>
+                            </button>
+                            <p class="data-action-desc" data-i18n="dataManagement.importJsonDesc">從先前匯出的 JSON 檔案還原資料</p>
+                            <input type="file" id="import-file-input" accept=".json" style="display: none;">
+                        </div>
+                    </div>
+
+                    <!-- Export PDF -->
+                    <div class="data-action-card">
+                        <div class="data-action-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                        <div class="data-action-content">
+                            <button id="export-pdf-btn" class="btn btn-primary">
+                                <i class="fa-solid fa-file-pdf"></i> <span data-i18n="dataManagement.exportPdfBtn">匯出 PDF 報告</span>
+                            </button>
+                            <p class="data-action-desc" data-i18n="dataManagement.exportPdfDesc">產生包含圖表和紀錄的完整 PDF 報告</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status message -->
+                <div class="data-status" id="data-status"></div>
+            </div>
+        </div>
+
     </div>
 
-    <footer
-        style="margin-top: 3rem; text-align: center; color: var(--text-secondary); font-size: 0.85rem; padding-top: 2rem; border-top: 1px solid var(--panel-border);">
-        <p><strong><i class="fa-solid fa-triangle-exclamation" style="color: #e3b341;"></i> 醫療免責聲明：</strong>
-            本工具僅供學術模擬與參考之用，計算結果基於簡化的單室藥物動力學模型與平均參數，無法代表個體真實生理狀況。任何劑量調整或用藥決策，請務必諮詢專業減重醫師或醫療人員。請勿以此結果取代專業醫療建議。</p>
-        <p style="margin-top: 0.5rem;">此開源工具不會將您的資料上傳至任何醫療伺服器，所有紀錄僅保存在您的瀏覽器中。</p>
+    <footer>
+        <p><strong><i class="fa-solid fa-triangle-exclamation" style="color: #e3b341;"></i> <span data-i18n="footer.disclaimer">醫療免責聲明：</span></strong>
+            <span data-i18n="footer.disclaimerText">本工具僅供學術模擬與參考之用，計算結果基於簡化的單室藥物動力學模型與平均參數，無法代表個體真實生理狀況。任何劑量調整或用藥決策，請務必諮詢專業減重醫師或醫療人員。請勿以此結果取代專業醫療建議。</span>
+        </p>
+        <p style="margin-top: 0.5rem;" data-i18n="footer.privacyText">此開源工具不會將您的資料上傳至任何醫療伺服器，所有紀錄僅保存在您的瀏覽器中。</p>
     </footer>
-    </div>
 
+    <!-- Scripts: order matters — dependencies first -->
+    <script src="i18n.js"></script>
+    <script src="pk.js"></script>
+    <script src="exercise.js"></script>
+    <script src="export.js"></script>
     <script src="app.js"></script>
 </body>
 

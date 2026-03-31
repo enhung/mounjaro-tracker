@@ -64,10 +64,30 @@ const DataManager = (() => {
 
     // ========== PDF Export ==========
 
+    // PDF always uses English labels — jsPDF's built-in fonts don't support
+    // CJK glyphs, and German umlauts can also render incorrectly. Fetching the
+    // 'en' locale separately guarantees clean Latin output for every UI language.
     async function exportPDF(chartCanvas) {
-        const t = I18n.t.bind(I18n);
+        // Load English locale for PDF labels
+        let en = {};
+        try {
+            const resp = await fetch('locales/en.json');
+            en = await resp.json();
+        } catch (e) {
+            console.warn('PDF: could not load en.json, falling back to I18n', e);
+        }
 
-        // Use html2canvas to capture the chart, then jsPDF to compose the report
+        // t_en: resolve dot-notation key from en locale, fall back to I18n
+        function t_en(key) {
+            const parts = key.split('.');
+            let v = en;
+            for (const p of parts) {
+                if (v && typeof v === 'object' && p in v) v = v[p];
+                else return I18n.t(key);
+            }
+            return typeof v === 'string' || Array.isArray(v) ? v : I18n.t(key);
+        }
+
         const { jsPDF } = window.jspdf || {};
         const JsPDFCtor = jsPDF || window.jsPDF;
         if (!JsPDFCtor) throw new Error('jsPDF not loaded');
@@ -77,18 +97,17 @@ const DataManager = (() => {
         const contentWidth = pageWidth - margin * 2;
         let y = margin;
 
-        // Helper: add text and advance y
         function addTitle(text, size) {
             doc.setFontSize(size || 16);
             doc.setTextColor(40, 40, 40);
-            doc.text(text, margin, y);
+            doc.text(String(text), margin, y);
             y += (size || 16) * 0.5 + 2;
         }
 
         function addText(text, size) {
             doc.setFontSize(size || 10);
             doc.setTextColor(80, 80, 80);
-            const lines = doc.splitTextToSize(text, contentWidth);
+            const lines = doc.splitTextToSize(String(text), contentWidth);
             doc.text(lines, margin, y);
             y += lines.length * (size || 10) * 0.4 + 2;
         }
@@ -107,38 +126,37 @@ const DataManager = (() => {
         }
 
         // ---- Title ----
-        addTitle(t('dataManagement.pdfTitle'), 18);
-        addText(`${t('dataManagement.pdfGenDate')}: ${new Date().toLocaleDateString()}`, 10);
+        addTitle(t_en('dataManagement.pdfTitle'), 18);
+        addText(`${t_en('dataManagement.pdfGenDate')}: ${new Date().toLocaleDateString('en-US')}`, 10);
         addLine();
 
         // ---- Treatment Summary ----
         checkPageBreak(40);
-        addTitle(t('dataManagement.pdfDoseSummary'), 14);
+        addTitle(t_en('dataManagement.pdfDoseSummary'), 14);
         const startDate = localStorage.getItem('mounjaro_startDate');
         if (startDate) {
-            addText(`${t('dataManagement.pdfStartDate')}: ${startDate}`);
+            addText(`${t_en('dataManagement.pdfStartDate')}: ${startDate}`);
         }
         const doses = JSON.parse(localStorage.getItem('mounjaro_doses') || '[]');
-        addText(`${t('dataManagement.pdfTotalDoses')}: ${doses.length}`);
+        addText(`${t_en('dataManagement.pdfTotalDoses')}: ${doses.length}`);
         if (doses.length > 0) {
-            const lastDose = doses.sort((a, b) => b.day - a.day)[0];
-            addText(`${t('dataManagement.pdfCurrentDose')}: ${lastDose.amount} mg`);
+            const lastDose = [...doses].sort((a, b) => b.day - a.day)[0];
+            addText(`${t_en('dataManagement.pdfCurrentDose')}: ${lastDose.amount} mg`);
         }
         addLine();
 
         // ---- Dose Records Table ----
         checkPageBreak(20 + doses.length * 8);
-        addTitle(t('dataManagement.pdfDoseRecords'), 14);
+        addTitle(t_en('dataManagement.pdfDoseRecords'), 14);
         const sortedDoses = [...doses].sort((a, b) => a.day - b.day);
-        // Simple table
         doc.setFontSize(9);
         doc.setTextColor(100, 100, 100);
         const colDay = margin;
         const colDate = margin + 25;
         const colAmount = margin + 80;
-        doc.text(t('doses.dayLabel'), colDay, y);
-        doc.text(t('doses.actualDateLabel'), colDate, y);
-        doc.text(t('doses.amountLabel'), colAmount, y);
+        doc.text('Day', colDay, y);
+        doc.text('Date', colDate, y);
+        doc.text('Dose', colAmount, y);
         y += 5;
         doc.setTextColor(40, 40, 40);
         for (const dose of sortedDoses) {
@@ -147,7 +165,7 @@ const DataManager = (() => {
             if (startDate) {
                 const d = new Date(startDate);
                 d.setDate(d.getDate() + dose.day);
-                doc.text(d.toLocaleDateString(), colDate, y);
+                doc.text(d.toLocaleDateString('en-US'), colDate, y);
             } else {
                 doc.text('-', colDate, y);
             }
@@ -160,7 +178,7 @@ const DataManager = (() => {
         // ---- Chart Screenshot ----
         if (chartCanvas) {
             checkPageBreak(80);
-            addTitle(t('dataManagement.pdfConcentrationChart'), 14);
+            addTitle(t_en('dataManagement.pdfConcentrationChart'), 14);
             try {
                 const imgData = chartCanvas.toDataURL('image/png');
                 const ratio = chartCanvas.height / chartCanvas.width;
@@ -178,23 +196,24 @@ const DataManager = (() => {
         const exercises = JSON.parse(localStorage.getItem('mounjaro_exercises') || '[]');
         if (exercises.length > 0) {
             checkPageBreak(20 + exercises.length * 8);
-            addTitle(t('dataManagement.pdfExerciseRecords'), 14);
+            addTitle(t_en('dataManagement.pdfExerciseRecords'), 14);
             doc.setFontSize(9);
             doc.setTextColor(100, 100, 100);
-            doc.text(t('exercise.dateLabel'), margin, y);
-            doc.text(t('exercise.typeLabel'), margin + 30, y);
-            doc.text(t('exercise.durationLabel'), margin + 70, y);
-            doc.text(t('exercise.noteLabel'), margin + 100, y);
+            doc.text('Date', margin, y);
+            doc.text('Type', margin + 30, y);
+            doc.text('Duration', margin + 70, y);
+            doc.text('Notes', margin + 100, y);
             y += 5;
             doc.setTextColor(40, 40, 40);
-            const exTypes = I18n.t('exercise.types');
-            for (const ex of exercises.sort((a, b) => a.date.localeCompare(b.date))) {
+            const enExTypes = (en.exercise && en.exercise.types) || {};
+            for (const ex of [...exercises].sort((a, b) => a.date.localeCompare(b.date))) {
                 checkPageBreak(6);
                 doc.text(ex.date, margin, y);
-                const typeName = (typeof exTypes === 'object' && exTypes[ex.type]) || ex.type;
+                const typeName = enExTypes[ex.type] || ex.type;
                 doc.text(typeName, margin + 30, y);
                 doc.text(`${ex.duration} min`, margin + 70, y);
-                const noteLines = doc.splitTextToSize(ex.note || '-', contentWidth - 100);
+                const noteText = (ex.note || '-').replace(/[^\x00-\x7F]/g, '?');
+                const noteLines = doc.splitTextToSize(noteText, contentWidth - 100);
                 doc.text(noteLines[0], margin + 100, y);
                 y += 5;
             }
@@ -207,21 +226,20 @@ const DataManager = (() => {
         const bodyProfile = JSON.parse(localStorage.getItem('mounjaro_bodyProfile') || '{"heightCm":null}');
         if (bodyRecords.length > 0) {
             checkPageBreak(20 + bodyRecords.length * 8);
-            addTitle(t('dataManagement.pdfBodyRecords'), 14);
+            addTitle(t_en('dataManagement.pdfBodyRecords'), 14);
             doc.setFontSize(9);
             doc.setTextColor(100, 100, 100);
-            doc.text(t('body.dateLabel'), margin, y);
-            doc.text(t('body.weightLabel'), margin + 35, y);
+            doc.text('Date', margin, y);
+            doc.text('Weight', margin + 35, y);
             doc.text('BMI', margin + 70, y);
-            doc.text(t('body.bodyFatLabel'), margin + 90, y);
+            doc.text('Body Fat', margin + 90, y);
             y += 5;
             doc.setTextColor(40, 40, 40);
-            const sorted = [...bodyRecords].sort((a, b) => a.date.localeCompare(b.date));
-            for (const rec of sorted) {
+            const sortedBody = [...bodyRecords].sort((a, b) => a.date.localeCompare(b.date));
+            for (const rec of sortedBody) {
                 checkPageBreak(6);
                 doc.text(rec.date, margin, y);
                 doc.text(rec.weightKg != null ? `${rec.weightKg} kg` : '-', margin + 35, y);
-                // BMI
                 let bmiStr = '-';
                 if (rec.weightKg && bodyProfile.heightCm) {
                     const m = bodyProfile.heightCm / 100;
@@ -237,19 +255,18 @@ const DataManager = (() => {
 
         // ---- Diet Reminders ----
         checkPageBreak(30);
-        addTitle(t('dataManagement.pdfDietReminder'), 14);
-        addText(`⚠ ${t('diet.alcoholWarning')}: ${t('diet.alcoholText')}`, 9);
-        addText(`${t('diet.nafBeerTitle')}: ${t('diet.nafBeerText')}`, 9);
+        addTitle(t_en('dataManagement.pdfDietReminder'), 14);
+        addText(`${t_en('diet.alcoholWarning')}: ${t_en('diet.alcoholText')}`, 9);
+        addText(`${t_en('diet.nafBeerTitle')}: ${t_en('diet.nafBeerText')}`, 9);
         addLine();
 
         // ---- Disclaimer ----
         checkPageBreak(15);
         doc.setFontSize(8);
         doc.setTextColor(150, 150, 150);
-        const disclaimerLines = doc.splitTextToSize(t('dataManagement.pdfDisclaimer'), contentWidth);
+        const disclaimerLines = doc.splitTextToSize(t_en('dataManagement.pdfDisclaimer'), contentWidth);
         doc.text(disclaimerLines, margin, y);
 
-        // Save
         const dateStr = new Date().toISOString().split('T')[0];
         doc.save(`mounjaro-report-${dateStr}.pdf`);
         return true;

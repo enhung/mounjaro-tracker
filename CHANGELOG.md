@@ -4,6 +4,13 @@ All notable changes to Mounjaro PK Simulator will be documented here.
 
 ---
 
+## [v1.0.1] — 2026-03-31
+
+### Bug Fixes
+- Fixed `zh-CN.json` invalid JSON caused by unescaped straight ASCII double-quote pairs used as Chinese quotation marks (`"无酒精"`, `"过滤"`) in `alcoholText` and `nafBeerText` — entire Simplified Chinese UI was silently falling back to zh-TW
+
+---
+
 ## [v1.0.0] — 2026-03-31
 
 ### Initial Release

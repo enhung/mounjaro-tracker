@@ -8,6 +8,7 @@
     "simulation": "Simulation",
     "diet": "Ernährungshinweise",
     "exercise": "Sportprotokoll",
+    "body": "Gewichtstrend",
     "data": "Datenverwaltung"
   },
   "doses": {
@@ -94,11 +95,46 @@
     "totalMinutes": "Gesamtdauer",
     "minutesUnit": "Min."
   },
+  "body": {
+    "title": "Gewichtstrend",
+    "subtitle": "Körpergewicht, Körperfett und BMI verfolgen",
+    "addBtn": "Messung hinzufügen",
+    "heightLabel": "Körpergröße (cm)",
+    "heightPlaceholder": "z.B. 170",
+    "heightSave": "Speichern",
+    "dateLabel": "Datum",
+    "weightLabel": "Gewicht (kg)",
+    "bodyFatLabel": "Körperfett (%)",
+    "bodyFatPlaceholder": "Optional",
+    "removeTitle": "Entfernen",
+    "noRecords": "Noch keine Messungen. Klicken Sie oben auf die Schaltfläche, um eine hinzuzufügen.",
+    "chartWeightTitle": "Gewichtsverlauf",
+    "chartBFTitle": "Körperfett-Verlauf",
+    "chartWeightLabel": "Gewicht (kg)",
+    "chartBFLabel": "Körperfett (%)",
+    "chartBMIMin": "BMI 18.5 Untergrenze",
+    "chartBMIMax": "BMI 24.9 Obergrenze",
+    "summaryTitle": "Körpermaß-Zusammenfassung",
+    "currentWeight": "Aktuelles Gewicht",
+    "currentBMI": "Aktueller BMI",
+    "totalLost": "Abgenommen",
+    "targetRange": "Zielgewichtsbereich",
+    "bmiZoneLabel": "BMI-Status",
+    "bmi": {
+      "underweight": "Untergewicht",
+      "normal": "Normalgewicht",
+      "overweight": "Übergewicht",
+      "obese1": "Adipositas Grad I",
+      "obese2": "Adipositas Grad II+"
+    },
+    "kgUnit": "kg",
+    "pctUnit": "%"
+  },
   "dataManagement": {
     "title": "Datenverwaltung",
     "subtitle": "Sicherungen exportieren oder vorherige Einträge importieren",
     "exportJsonBtn": "JSON-Sicherung exportieren",
-    "exportJsonDesc": "Alle Dosis-, Sport- und Einstellungsdaten als JSON-Datei exportieren",
+    "exportJsonDesc": "Alle Dosis-, Sport-, Körpermaß- und Einstellungsdaten als JSON-Datei exportieren",
     "importJsonBtn": "JSON-Sicherung importieren",
     "importJsonDesc": "Daten aus einer zuvor exportierten JSON-Datei wiederherstellen",
     "exportPdfBtn": "PDF-Bericht exportieren",
@@ -118,6 +154,7 @@
     "pdfDoseRecords": "Injektionsprotokoll",
     "pdfConcentrationChart": "Konzentrationsdiagramm",
     "pdfExerciseRecords": "Sportprotokoll",
+    "pdfBodyRecords": "Gewichtsprotokoll",
     "pdfDietReminder": "Ernährungshinweise",
     "pdfDisclaimer": "Dieser Bericht dient nur als Referenz und ersetzt keine professionelle medizinische Beratung."
   },

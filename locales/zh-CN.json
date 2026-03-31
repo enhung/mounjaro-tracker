@@ -8,6 +8,7 @@
     "simulation": "浓度模拟",
     "diet": "饮食建议",
     "exercise": "运动记录",
+    "body": "体重趋势",
     "data": "数据管理"
   },
   "doses": {
@@ -93,6 +94,41 @@
     "totalSessions": "总运动次数",
     "totalMinutes": "总运动时长",
     "minutesUnit": "分钟"
+  },
+  "body": {
+    "title": "体重趋势",
+    "subtitle": "记录体重、体脂，追踪 BMI 与减重进度",
+    "addBtn": "新增测量记录",
+    "heightLabel": "身高 (cm)",
+    "heightPlaceholder": "例：170",
+    "heightSave": "保存",
+    "dateLabel": "日期",
+    "weightLabel": "体重 (kg)",
+    "bodyFatLabel": "体脂率 (%)",
+    "bodyFatPlaceholder": "选填",
+    "removeTitle": "移除",
+    "noRecords": "暂无测量记录，点击上方按钮新增",
+    "chartWeightTitle": "体重趋势图",
+    "chartBFTitle": "体脂率趋势图",
+    "chartWeightLabel": "体重 (kg)",
+    "chartBFLabel": "体脂率 (%)",
+    "chartBMIMin": "BMI 18.5 下限",
+    "chartBMIMax": "BMI 24.9 上限",
+    "summaryTitle": "体重摘要",
+    "currentWeight": "当前体重",
+    "currentBMI": "当前 BMI",
+    "totalLost": "已减去",
+    "targetRange": "目标体重范围",
+    "bmiZoneLabel": "BMI 状态",
+    "bmi": {
+      "underweight": "体重过轻",
+      "normal": "标准体重",
+      "overweight": "体重过重",
+      "obese1": "轻度肥胖",
+      "obese2": "中重度肥胖"
+    },
+    "kgUnit": "kg",
+    "pctUnit": "%"
   },
   "dataManagement": {
     "title": "数据管理",

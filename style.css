@@ -574,8 +574,141 @@ header p {
     border: 1px dashed var(--panel-border);
 }
 
-/* ========== Data Management ========== */
+/* ========== Body Metrics Section ========== */
 
+.body-height-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.body-height-row label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.body-height-row input {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--panel-border);
+    color: var(--text-primary);
+    padding: 0.45rem 0.7rem;
+    border-radius: 6px;
+    font-family: inherit;
+    outline: none;
+    width: 100px;
+    transition: border-color 0.2s ease;
+}
+
+.body-height-row input:focus {
+    border-color: var(--accent-color);
+}
+
+.body-summary {
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.body-summary .stat-card {
+    min-width: 120px;
+}
+
+.bmi-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.bmi-badge {
+    display: inline-block;
+    padding: 0.25rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid currentColor;
+    letter-spacing: 0.02em;
+}
+
+.body-chart-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--panel-border);
+}
+
+.body-chart-section h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.body-chart-container {
+    position: relative;
+    height: 280px;
+    width: 100%;
+}
+
+.body-records {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--panel-border);
+    max-height: 450px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.body-records::-webkit-scrollbar {
+    width: 6px;
+}
+.body-records::-webkit-scrollbar-thumb {
+    background: var(--panel-border);
+    border-radius: 3px;
+}
+
+.body-item {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr auto;
+    gap: 0.8rem;
+    background: rgba(255,255,255,0.03);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.body-item:hover {
+    transform: translateX(2px);
+    border-color: rgba(255,255,255,0.1);
+}
+
+@media (max-width: 768px) {
+    .body-item {
+        grid-template-columns: 1fr 1fr;
+    }
+    .body-item .form-group:nth-child(4) {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+    }
+    .body-summary {
+        flex-wrap: wrap;
+    }
+    .body-height-row {
+        flex-wrap: wrap;
+    }
+}
+
+/* ========== Data Management ========== */
 .data-actions {
     display: flex;
     flex-direction: column;

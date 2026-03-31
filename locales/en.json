@@ -8,6 +8,7 @@
     "simulation": "Simulation",
     "diet": "Diet Advice",
     "exercise": "Exercise Log",
+    "body": "Weight Trend",
     "data": "Data Management"
   },
   "doses": {
@@ -94,11 +95,46 @@
     "totalMinutes": "Total Duration",
     "minutesUnit": "min"
   },
+  "body": {
+    "title": "Weight Trend",
+    "subtitle": "Track weight, body fat, BMI and weight loss progress",
+    "addBtn": "Add Measurement",
+    "heightLabel": "Height (cm)",
+    "heightPlaceholder": "e.g. 170",
+    "heightSave": "Save",
+    "dateLabel": "Date",
+    "weightLabel": "Weight (kg)",
+    "bodyFatLabel": "Body Fat (%)",
+    "bodyFatPlaceholder": "Optional",
+    "removeTitle": "Remove",
+    "noRecords": "No measurements yet. Click the button above to add one.",
+    "chartWeightTitle": "Weight Trend Chart",
+    "chartBFTitle": "Body Fat % Trend Chart",
+    "chartWeightLabel": "Weight (kg)",
+    "chartBFLabel": "Body Fat (%)",
+    "chartBMIMin": "BMI 18.5 Lower Limit",
+    "chartBMIMax": "BMI 24.9 Upper Limit",
+    "summaryTitle": "Body Metrics Summary",
+    "currentWeight": "Current Weight",
+    "currentBMI": "Current BMI",
+    "totalLost": "Total Lost",
+    "targetRange": "Target Weight Range",
+    "bmiZoneLabel": "BMI Status",
+    "bmi": {
+      "underweight": "Underweight",
+      "normal": "Normal",
+      "overweight": "Overweight",
+      "obese1": "Obese (Class I)",
+      "obese2": "Obese (Class II+)"
+    },
+    "kgUnit": "kg",
+    "pctUnit": "%"
+  },
   "dataManagement": {
     "title": "Data Management",
     "subtitle": "Export backups or import previous records",
     "exportJsonBtn": "Export JSON Backup",
-    "exportJsonDesc": "Export all dose records, exercise records, and settings as a JSON file",
+    "exportJsonDesc": "Export all dose records, exercise records, body metrics, and settings as a JSON file",
     "importJsonBtn": "Import JSON Backup",
     "importJsonDesc": "Restore data from a previously exported JSON file",
     "exportPdfBtn": "Export PDF Report",
@@ -118,6 +154,7 @@
     "pdfDoseRecords": "Injection Records",
     "pdfConcentrationChart": "Concentration Chart",
     "pdfExerciseRecords": "Exercise Records",
+    "pdfBodyRecords": "Weight Records",
     "pdfDietReminder": "Diet Reminders",
     "pdfDisclaimer": "This report is for reference only and should not replace professional medical advice."
   },

@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.3/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -46,6 +46,9 @@
             </button>
             <button class="tab-btn" data-tab="exercise">
                 <i class="fa-solid fa-dumbbell"></i> <span data-i18n="tabs.exercise">運動紀錄</span>
+            </button>
+            <button class="tab-btn" data-tab="body">
+                <i class="fa-solid fa-weight-scale"></i> <span data-i18n="tabs.body">體重趨勢</span>
             </button>
             <button class="tab-btn" data-tab="data">
                 <i class="fa-solid fa-database"></i> <span data-i18n="tabs.data">資料管理</span>
@@ -197,6 +200,71 @@
             </div>
         </div>
 
+        <!-- ==================== TAB: Body Weight Trend ==================== -->
+        <div class="tab-content" id="tab-body">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-weight-scale"></i> <span data-i18n="body.title">體重趨勢</span></h2>
+                    <button id="add-body-btn" class="btn btn-primary"><i class="fa-solid fa-plus"></i> <span data-i18n="body.addBtn">新增量測紀錄</span></button>
+                </div>
+                <p class="section-subtitle" data-i18n="body.subtitle">記錄體重、體脂，追蹤 BMI 與減重進度</p>
+
+                <!-- Height input -->
+                <div class="body-height-row">
+                    <label for="body-height-input"><i class="fa-solid fa-ruler-vertical"></i> <span data-i18n="body.heightLabel">身高 (cm)</span></label>
+                    <input type="number" id="body-height-input" min="100" max="250" step="0.1" data-i18n-placeholder="body.heightPlaceholder" placeholder="例：170">
+                    <button id="body-height-save-btn" class="btn btn-primary"><span data-i18n="body.heightSave">儲存</span></button>
+                </div>
+
+                <!-- Body metrics summary cards -->
+                <div class="stats-container body-summary" id="body-summary">
+                    <div class="stat-card highlight">
+                        <div class="stat-title" data-i18n="body.currentWeight">目前體重</div>
+                        <div class="stat-value" id="body-stat-weight">-- <span class="unit">kg</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title" data-i18n="body.currentBMI">目前 BMI</div>
+                        <div class="stat-value" id="body-stat-bmi">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title" data-i18n="body.totalLost">已減去</div>
+                        <div class="stat-value" id="body-stat-lost">-- <span class="unit">kg</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title" data-i18n="body.targetRange">目標體重範圍</div>
+                        <div class="stat-value" id="body-stat-target" style="font-size:1.2rem;">--</div>
+                    </div>
+                </div>
+
+                <!-- BMI zone badge -->
+                <div class="bmi-badge-row" id="bmi-badge-row" style="display:none;">
+                    <span data-i18n="body.bmiZoneLabel">BMI 狀態</span>
+                    <span class="bmi-badge" id="bmi-badge"></span>
+                </div>
+
+                <!-- Weight Chart -->
+                <div class="body-chart-section">
+                    <h3><i class="fa-solid fa-chart-line"></i> <span data-i18n="body.chartWeightTitle">體重趨勢圖</span></h3>
+                    <div class="body-chart-container">
+                        <canvas id="bodyWeightChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Body Fat Chart (only shown when data present) -->
+                <div class="body-chart-section" id="body-bf-section" style="display:none;">
+                    <h3><i class="fa-solid fa-percent"></i> <span data-i18n="body.chartBFTitle">體脂率趨勢圖</span></h3>
+                    <div class="body-chart-container">
+                        <canvas id="bodyBFChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Body Records list -->
+                <div class="body-records" id="body-records">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
         <!-- ==================== TAB: Data Management ==================== -->
         <div class="tab-content" id="tab-data">
             <div class="panel">
@@ -259,6 +327,7 @@
     <script src="i18n.js"></script>
     <script src="pk.js"></script>
     <script src="exercise.js"></script>
+    <script src="body.js"></script>
     <script src="export.js"></script>
     <script src="app.js"></script>
 </body>

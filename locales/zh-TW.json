@@ -8,6 +8,7 @@
     "simulation": "濃度模擬",
     "diet": "飲食建議",
     "exercise": "運動紀錄",
+    "body": "體重趨勢",
     "data": "資料管理"
   },
   "doses": {
@@ -94,6 +95,41 @@
     "totalMinutes": "總運動時長",
     "minutesUnit": "分鐘"
   },
+  "body": {
+    "title": "體重趨勢",
+    "subtitle": "記錄體重、體脂，追蹤 BMI 與減重進度",
+    "addBtn": "新增量測紀錄",
+    "heightLabel": "身高 (cm)",
+    "heightPlaceholder": "例：170",
+    "heightSave": "儲存",
+    "dateLabel": "日期",
+    "weightLabel": "體重 (kg)",
+    "bodyFatLabel": "體脂率 (%)",
+    "bodyFatPlaceholder": "選填",
+    "removeTitle": "移除",
+    "noRecords": "尚無量測紀錄，點擊上方按鈕新增",
+    "chartWeightTitle": "體重趨勢圖",
+    "chartBFTitle": "體脂率趨勢圖",
+    "chartWeightLabel": "體重 (kg)",
+    "chartBFLabel": "體脂率 (%)",
+    "chartBMIMin": "BMI 18.5 下限",
+    "chartBMIMax": "BMI 24.9 上限",
+    "summaryTitle": "體位摘要",
+    "currentWeight": "目前體重",
+    "currentBMI": "目前 BMI",
+    "totalLost": "已減去",
+    "targetRange": "目標體重範圍",
+    "bmiZoneLabel": "BMI 狀態",
+    "bmi": {
+      "underweight": "體重過輕",
+      "normal": "標準體重",
+      "overweight": "體重過重",
+      "obese1": "輕度肥胖",
+      "obese2": "中重度肥胖"
+    },
+    "kgUnit": "kg",
+    "pctUnit": "%"
+  },
   "dataManagement": {
     "title": "資料管理",
     "subtitle": "匯出備份或匯入先前的紀錄",
@@ -119,6 +155,7 @@
     "pdfConcentrationChart": "濃度變化圖",
     "pdfExerciseRecords": "運動紀錄",
     "pdfDietReminder": "飲食提醒重點",
+    "pdfBodyRecords": "體重紀錄",
     "pdfDisclaimer": "本報告僅供參考，不可取代專業醫療建議。"
   },
   "footer": {

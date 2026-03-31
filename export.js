@@ -1,7 +1,7 @@
 // export.js — Data export/import module (JSON + PDF)
 
 const DataManager = (() => {
-    const EXPORT_VERSION = '2.0';
+    const EXPORT_VERSION = '3.0';
 
     // ========== JSON Export/Import ==========
 
@@ -14,6 +14,8 @@ const DataManager = (() => {
             threshold: localStorage.getItem('mounjaro_threshold') || '4.0',
             startDate: localStorage.getItem('mounjaro_startDate') || '',
             exercises: JSON.parse(localStorage.getItem('mounjaro_exercises') || '[]'),
+            bodyRecords: JSON.parse(localStorage.getItem('mounjaro_bodyRecords') || '[]'),
+            bodyProfile: JSON.parse(localStorage.getItem('mounjaro_bodyProfile') || '{"heightCm":null}'),
             lang: localStorage.getItem('mounjaro_lang') || 'zh-TW'
         };
 
@@ -45,7 +47,11 @@ const DataManager = (() => {
                     if (data.threshold) localStorage.setItem('mounjaro_threshold', data.threshold);
                     if (data.startDate) localStorage.setItem('mounjaro_startDate', data.startDate);
                     if (data.exercises) localStorage.setItem('mounjaro_exercises', JSON.stringify(data.exercises));
+                    if (data.bodyRecords) localStorage.setItem('mounjaro_bodyRecords', JSON.stringify(data.bodyRecords));
+                    if (data.bodyProfile) localStorage.setItem('mounjaro_bodyProfile', JSON.stringify(data.bodyProfile));
                     if (data.lang) localStorage.setItem('mounjaro_lang', data.lang);
+                    // Reload BodyMetrics in-memory state
+                    if (typeof BodyMetrics !== 'undefined') BodyMetrics.load();
                     resolve(data);
                 } catch (err) {
                     reject(err);
@@ -62,8 +68,10 @@ const DataManager = (() => {
         const t = I18n.t.bind(I18n);
 
         // Use html2canvas to capture the chart, then jsPDF to compose the report
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
+        const { jsPDF } = window.jspdf || {};
+        const JsPDFCtor = jsPDF || window.jsPDF;
+        if (!JsPDFCtor) throw new Error('jsPDF not loaded');
+        const doc = new JsPDFCtor('p', 'mm', 'a4');
         const pageWidth = doc.internal.pageSize.getWidth();
         const margin = 15;
         const contentWidth = pageWidth - margin * 2;
@@ -188,6 +196,39 @@ const DataManager = (() => {
                 doc.text(`${ex.duration} min`, margin + 70, y);
                 const noteLines = doc.splitTextToSize(ex.note || '-', contentWidth - 100);
                 doc.text(noteLines[0], margin + 100, y);
+                y += 5;
+            }
+            y += 3;
+            addLine();
+        }
+
+        // ---- Body Weight Records ----
+        const bodyRecords = JSON.parse(localStorage.getItem('mounjaro_bodyRecords') || '[]');
+        const bodyProfile = JSON.parse(localStorage.getItem('mounjaro_bodyProfile') || '{"heightCm":null}');
+        if (bodyRecords.length > 0) {
+            checkPageBreak(20 + bodyRecords.length * 8);
+            addTitle(t('dataManagement.pdfBodyRecords'), 14);
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text(t('body.dateLabel'), margin, y);
+            doc.text(t('body.weightLabel'), margin + 35, y);
+            doc.text('BMI', margin + 70, y);
+            doc.text(t('body.bodyFatLabel'), margin + 90, y);
+            y += 5;
+            doc.setTextColor(40, 40, 40);
+            const sorted = [...bodyRecords].sort((a, b) => a.date.localeCompare(b.date));
+            for (const rec of sorted) {
+                checkPageBreak(6);
+                doc.text(rec.date, margin, y);
+                doc.text(rec.weightKg != null ? `${rec.weightKg} kg` : '-', margin + 35, y);
+                // BMI
+                let bmiStr = '-';
+                if (rec.weightKg && bodyProfile.heightCm) {
+                    const m = bodyProfile.heightCm / 100;
+                    bmiStr = (rec.weightKg / (m * m)).toFixed(1);
+                }
+                doc.text(bmiStr, margin + 70, y);
+                doc.text(rec.bodyFatPct != null ? `${rec.bodyFatPct}%` : '-', margin + 90, y);
                 y += 5;
             }
             y += 3;

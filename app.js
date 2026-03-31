@@ -1,8 +1,10 @@
 // app.js — Main application controller
-// Integrates: i18n, pk, exercise, export modules
+// Integrates: i18n, pk, exercise, body, export modules
 
 let doses = [];
 let chartInstance = null;
+let bodyWeightChartInstance = null;
+let bodyBFChartInstance = null;
 
 // ========== State Management ==========
 
@@ -39,6 +41,14 @@ function loadState() {
 
     // Exercise
     Exercise.load();
+
+    // Body metrics
+    BodyMetrics.load();
+    const savedHeight = BodyMetrics.getHeight();
+    if (savedHeight) {
+        const el = document.getElementById('body-height-input');
+        if (el) el.value = savedHeight;
+    }
 }
 
 function saveState() {
@@ -91,6 +101,9 @@ function applyTranslations() {
     renderDietLists();
     renderExerciseRecords();
     renderExerciseAdvice();
+    renderBodyRecords();
+    renderBodyCharts();
+    updateBodySummary();
     updateStartDateInfo();
     updateSimulation();
 }
@@ -451,6 +464,297 @@ function renderExerciseAdvice() {
     }
 }
 
+// ========== Body Metrics Section ==========
+
+function renderBodyRecords() {
+    const container = document.getElementById('body-records');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const t = I18n.t.bind(I18n);
+    const records = BodyMetrics.getAll();
+
+    if (records.length === 0) {
+        container.innerHTML = `<div class="empty-state">${t('body.noRecords')}</div>`;
+        return;
+    }
+
+    records.forEach(rec => {
+        const el = document.createElement('div');
+        el.className = 'body-item';
+        el.innerHTML = `
+            <div class="form-group">
+                <label>${t('body.dateLabel')}</label>
+                <input type="date" value="${rec.date}" data-id="${rec.id}" class="body-date-input">
+            </div>
+            <div class="form-group">
+                <label>${t('body.weightLabel')}</label>
+                <input type="number" step="0.1" min="20" max="300" value="${rec.weightKg != null ? rec.weightKg : ''}" data-id="${rec.id}" class="body-weight-input" placeholder="kg">
+            </div>
+            <div class="form-group">
+                <label>${t('body.bodyFatLabel')}</label>
+                <input type="number" step="0.1" min="1" max="70" value="${rec.bodyFatPct != null ? rec.bodyFatPct : ''}" data-id="${rec.id}" class="body-bf-input" placeholder="${t('body.bodyFatPlaceholder')}">
+            </div>
+            <div class="form-group" style="justify-content: flex-end;">
+                <button class="btn btn-danger" onclick="removeBodyRecord(${rec.id})" title="${t('body.removeTitle')}"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        `;
+        container.appendChild(el);
+    });
+
+    // Attach listeners
+    container.querySelectorAll('.body-date-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+            BodyMetrics.update(parseInt(e.target.dataset.id), 'date', e.target.value);
+            renderBodyCharts();
+            updateBodySummary();
+        });
+    });
+    container.querySelectorAll('.body-weight-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+            BodyMetrics.update(parseInt(e.target.dataset.id), 'weightKg', e.target.value);
+            renderBodyCharts();
+            updateBodySummary();
+        });
+    });
+    container.querySelectorAll('.body-bf-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+            BodyMetrics.update(parseInt(e.target.dataset.id), 'bodyFatPct', e.target.value);
+            renderBodyCharts();
+        });
+    });
+}
+
+function addBodyRecord() {
+    BodyMetrics.add({
+        date: new Date().toISOString().split('T')[0],
+        weightKg: null,
+        bodyFatPct: null
+    });
+    renderBodyRecords();
+    renderBodyCharts();
+    updateBodySummary();
+}
+
+function removeBodyRecord(id) {
+    BodyMetrics.remove(id);
+    renderBodyRecords();
+    renderBodyCharts();
+    updateBodySummary();
+}
+window.removeBodyRecord = removeBodyRecord;
+
+function updateBodySummary() {
+    const t = I18n.t.bind(I18n);
+    const summary = BodyMetrics.getSummary();
+    const heightCm = BodyMetrics.getHeight();
+
+    // Current weight
+    const weightEl = document.getElementById('body-stat-weight');
+    if (weightEl) {
+        if (summary.latest && summary.latest.weightKg != null) {
+            weightEl.innerHTML = `${summary.latest.weightKg.toFixed(1)} <span class="unit">kg</span>`;
+        } else {
+            weightEl.innerHTML = `-- <span class="unit">kg</span>`;
+        }
+    }
+
+    // Current BMI
+    const bmiEl = document.getElementById('body-stat-bmi');
+    const bmiRow = document.getElementById('bmi-badge-row');
+    const bmiChip = document.getElementById('bmi-badge');
+    if (bmiEl) {
+        if (summary.currentBMI != null) {
+            const zone = BodyMetrics.getBMIZone(summary.currentBMI);
+            bmiEl.textContent = summary.currentBMI.toFixed(1);
+            bmiEl.style.color = zone ? zone.color : '';
+            if (bmiRow) bmiRow.style.display = '';
+            if (bmiChip && zone) {
+                bmiChip.textContent = t(`body.${zone.label}`);
+                bmiChip.style.background = zone.color + '22';
+                bmiChip.style.color = zone.color;
+                bmiChip.style.borderColor = zone.color;
+            }
+        } else {
+            bmiEl.textContent = '--';
+            bmiEl.style.color = '';
+            if (bmiRow) bmiRow.style.display = 'none';
+        }
+    }
+
+    // Total lost
+    const lostEl = document.getElementById('body-stat-lost');
+    if (lostEl) {
+        if (summary.lost != null) {
+            const sign = summary.lost >= 0 ? '-' : '+';
+            lostEl.innerHTML = `${sign}${Math.abs(summary.lost).toFixed(1)} <span class="unit">kg</span>`;
+        } else {
+            lostEl.innerHTML = `-- <span class="unit">kg</span>`;
+        }
+    }
+
+    // Target range
+    const targetEl = document.getElementById('body-stat-target');
+    if (targetEl) {
+        const range = BodyMetrics.targetWeightRange(heightCm);
+        if (range) {
+            targetEl.innerHTML = `${range.min} – ${range.max} <span class="unit">kg</span>`;
+        } else {
+            targetEl.textContent = '--';
+        }
+    }
+}
+
+function renderBodyCharts() {
+    const t = I18n.t.bind(I18n);
+    const records = BodyMetrics.getAll();
+    const heightCm = BodyMetrics.getHeight();
+
+    const labels = records.map(r => r.date);
+    const weights = records.map(r => r.weightKg);
+    const bfData = records.map(r => r.bodyFatPct);
+    const hasBF = bfData.some(v => v != null);
+
+    // --- Weight Chart ---
+    const wCtx = document.getElementById('bodyWeightChart');
+    if (wCtx) {
+        if (bodyWeightChartInstance) bodyWeightChartInstance.destroy();
+
+        // BMI reference lines (weight = BMI * h^2)
+        const datasets = [
+            {
+                label: t('body.chartWeightLabel'),
+                data: weights,
+                borderColor: '#58a6ff',
+                backgroundColor: 'rgba(88,166,255,0.15)',
+                borderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                fill: true,
+                tension: 0.3,
+                spanGaps: true
+            }
+        ];
+
+        if (heightCm) {
+            const m = heightCm / 100;
+            const bmiMinWeight = +(18.5 * m * m).toFixed(1);
+            const bmiMaxWeight = +(24.9 * m * m).toFixed(1);
+            const refLine = labels.map(() => null); // placeholder length
+
+            datasets.push({
+                label: t('body.chartBMIMin'),
+                data: labels.map(() => bmiMinWeight),
+                borderColor: '#3fb950',
+                backgroundColor: 'transparent',
+                borderWidth: 1.5,
+                borderDash: [6, 4],
+                pointRadius: 0,
+                fill: false,
+                tension: 0
+            });
+            datasets.push({
+                label: t('body.chartBMIMax'),
+                data: labels.map(() => bmiMaxWeight),
+                borderColor: '#e3b341',
+                backgroundColor: 'transparent',
+                borderWidth: 1.5,
+                borderDash: [6, 4],
+                pointRadius: 0,
+                fill: false,
+                tension: 0
+            });
+        }
+
+        bodyWeightChartInstance = new Chart(wCtx.getContext('2d'), {
+            type: 'line',
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { labels: { color: '#f0f6fc', font: { size: 12 } } },
+                    tooltip: {
+                        backgroundColor: 'rgba(22,27,34,0.92)',
+                        titleColor: '#f0f6fc',
+                        bodyColor: '#8b949e',
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: (ctx) => ctx.raw != null ? `${ctx.dataset.label}: ${ctx.raw} kg` : null
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b949e' } },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#8b949e', callback: (v) => `${v} kg` },
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    }
+
+    // --- Body Fat Chart ---
+    const bfSection = document.getElementById('body-bf-section');
+    const bfCtx = document.getElementById('bodyBFChart');
+    if (bfCtx) {
+        if (bodyBFChartInstance) bodyBFChartInstance.destroy();
+        if (hasBF) {
+            if (bfSection) bfSection.style.display = '';
+            bodyBFChartInstance = new Chart(bfCtx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: t('body.chartBFLabel'),
+                        data: bfData,
+                        borderColor: '#8957e5',
+                        backgroundColor: 'rgba(137,87,229,0.15)',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 7,
+                        fill: true,
+                        tension: 0.3,
+                        spanGaps: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { labels: { color: '#f0f6fc', font: { size: 12 } } },
+                        tooltip: {
+                            backgroundColor: 'rgba(22,27,34,0.92)',
+                            titleColor: '#f0f6fc',
+                            bodyColor: '#8b949e',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: (ctx) => ctx.raw != null ? `${ctx.dataset.label}: ${ctx.raw}%` : null
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b949e' } },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#8b949e', callback: (v) => `${v}%` },
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        } else {
+            if (bfSection) bfSection.style.display = 'none';
+        }
+    }
+}
+
 // ========== Data Management ==========
 
 function initDataManagement() {
@@ -477,6 +781,10 @@ function initDataManagement() {
             // Reload everything
             loadState();
             applyTranslations();
+            // Reload height input
+            const savedHeight = BodyMetrics.getHeight();
+            const heightEl = document.getElementById('body-height-input');
+            if (heightEl && savedHeight) heightEl.value = savedHeight;
         } catch (err) {
             showDataStatus(I18n.t('dataManagement.importError'), 'error');
         }
@@ -531,6 +839,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderDoses(); // re-render to update actual dates
     });
     document.getElementById('add-exercise-btn').addEventListener('click', addExercise);
+
+    // Body metrics event listeners
+    document.getElementById('add-body-btn').addEventListener('click', addBodyRecord);
+    document.getElementById('body-height-save-btn').addEventListener('click', () => {
+        const val = document.getElementById('body-height-input').value;
+        BodyMetrics.setHeight(val);
+        updateBodySummary();
+        renderBodyCharts();
+    });
+    document.getElementById('body-height-input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') document.getElementById('body-height-save-btn').click();
+    });
 
     // Data management buttons
     initDataManagement();
